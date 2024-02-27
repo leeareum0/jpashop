@@ -45,11 +45,13 @@ public class MemberApiController {
         return new UpdateMemberResponse(findMember.getId(), findMember.getName());
     }
 
+    //1. 회원 조회 API - 엔티티 외부에 직접 노출
     @GetMapping("/api/v1/members")
     public List<Member> membersV1() {
         return memberService.findMembers();
     }
 
+    //2. 회원 조회 API - 별도의 DTO 사용
     @GetMapping("/api/v2/members")
     public Result memberV2() {
         List<Member> findMembers = memberService.findMembers();
