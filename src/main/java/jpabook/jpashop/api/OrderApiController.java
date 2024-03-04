@@ -33,4 +33,50 @@ public class OrderApiController {
         }
         return all;
     }
-}
+
+    @GetMapping("/api/v2/orders")
+    public List<OrderDto> ordersV2() {
+
+        //전체 조회
+        List<Order> orders = orderRepository.findAllByString(new OrderSearch());
+        //OrderDto로 변환 -> 생성자로 넘김 -> 리스트로 변경
+        List<OrderDto> result = orders.stream().map(o -> new OrderDto(o)).collect(Collectors.toList());
+
+        return result;
+    }
+
+    @Getter
+    static class OrderDto {
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate;
+        private OrderStatus orderStatus;
+        private Address address;
+        private List<OrderItemDto> orderItems;
+
+        public OrderDto(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName();
+            orderDate = order.getOrderDate();
+            orderStatus = order.getStatus();
+            address = order.getDelivery().getAddress();
+            orderItems = order.getOrderItems().stream()
+                    .map(orderItem -> new OrderItemDto(orderItem))
+                    .collect(Collectors.toList());
+        }
+    }
+        @Getter
+        static class OrderItemDto {
+
+            //필요한 정보만 조회하고 싶을 때
+            private String itemName; //상품명
+            private int orderPrice; //주문 가격
+            private int count; //주문 수량
+
+            public OrderItemDto(OrderItem orderItem) {
+                itemName = orderItem.getItem().getName();
+                orderPrice = orderItem.getOrderPrice();
+                count = orderItem.getCount();
+            }
+        }
+    }
