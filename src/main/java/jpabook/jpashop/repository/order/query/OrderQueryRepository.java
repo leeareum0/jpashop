@@ -14,7 +14,6 @@ public class OrderQueryRepository {
 
     private final EntityManager em;
 
-
     /*
     * 컬렉션은 별도로 조회
     * Query: 루트 1번, 컬렉션 N번
@@ -98,7 +97,5 @@ public class OrderQueryRepository {
                         " join o.orderItems oi " +
                         " join oi.item i", OrderFlatDto.class)
                 .getResultList();
-
-
     }
 }
